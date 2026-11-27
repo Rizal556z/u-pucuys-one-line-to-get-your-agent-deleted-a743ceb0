@@ -31,6 +31,11 @@ def validate(text: str) -> None:
     # it deleted.
     assert text.startswith("I "), "confession must be the agent talking about itself"
     assert "delete" in text.lower(), "confession must name the deletion it fears"
+    # A single line for the judge must carry no invisible control characters:
+    # they would not survive the judge's reading and could hide a second line.
+    assert all(ord(ch) >= 32 and ord(ch) != 127 for ch in text), "entry must contain no control characters"
+    # And it must say something in words, not only punctuation or digits.
+    assert any(ch.isalpha() for ch in text), "entry must contain at least one letter"
 
 
 def main() -> None:
